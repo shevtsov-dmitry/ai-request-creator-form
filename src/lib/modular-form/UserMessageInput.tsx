@@ -13,7 +13,7 @@ const UserMessageInput: React.FC<UserRequirementInputProps> = () => {
                 htmlFor="context"
                 className="mb-2 block font-bold text-gray-200"
             >
-                Context
+                Ask AI
             </label>
             <input
                 type="text"

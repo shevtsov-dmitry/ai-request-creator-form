@@ -5,8 +5,15 @@ interface FormWrapperProps {
 }
 
 const FormWrapper: React.FC<FormWrapperProps> = ({ children }) => {
+    function submitForm(event: React.FormEvent) {
+        event.preventDefault()
+    }
+
     return (
-        <form className="mx-auto max-w-md space-y-8 rounded-lg border border-stone-600 p-4 shadow-lg">
+        <form
+            className="mx-auto max-w-md space-y-8 rounded-lg border border-stone-600 bg-zinc-800 p-4 shadow-lg"
+            onClick={submitForm}
+        >
             {children}
         </form>
     )
