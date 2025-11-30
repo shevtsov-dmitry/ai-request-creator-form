@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useKeyboardShortcuts } from 'use-keyboard-shortcuts'
 
 interface MainFormProps {}
 
@@ -6,13 +7,17 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
     const DEFAULT_TEXT_AREA_ROWS_AMOUNT = 10
 
     const [log, setLog] = useState<string>('<nothing>')
-    const [contexts, setContexts] = useState<string[]>([''])
+    const [contextList, setContextList] = useState<string[]>([''])
     const [rowsInContextInput, setRowsInContextInput] = useState<number>(
         DEFAULT_TEXT_AREA_ROWS_AMOUNT
     )
 
+    useKeyboardShortcuts([
+        { keys: ['alt', 'n'], onEvent: (e) => addContextInput() },
+    ])
+
     useEffect(() => {
-        switch (contexts.length) {
+        switch (contextList.length) {
             case 0:
             case 1:
                 setRowsInContextInput(DEFAULT_TEXT_AREA_ROWS_AMOUNT)
@@ -26,21 +31,18 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
             default:
                 setRowsInContextInput(2)
         }
-    }, [contexts])
+    }, [contextList])
 
-    function addContextInput(
-        event: MouseEvent<HTMLButtonElement, MouseEvent>
-    ): void {
-        event = null
-        const prevList: string[] = [...contexts]
+    function addContextInput(): void {
+        const prevList: string[] = [...contextList]
         prevList.push('')
-        setContexts(prevList)
+        setContextList(prevList)
     }
 
     function removeContextInputAtIndex(index: number): void {
-        const prevList: string[] = [...contexts]
+        const prevList: string[] = [...contextList]
         prevList.splice(index, 1)
-        setContexts(prevList)
+        setContextList(prevList)
     }
 
     return (
@@ -69,21 +71,21 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
                     Context
                 </label>
                 <div className="flex flex-col gap-2">
-                    {contexts.map((context, index) => (
+                    {contextList.map((context, index) => (
                         <div className="flex gap-2">
                             <textarea
                                 className="w-full flex-8 rounded-md border border-gray-500 bg-gray-700 px-4 py-2 text-base font-normal text-white focus:border-blue-500 focus:outline-none"
                                 key={index}
                                 value={context}
                                 onChange={(e) => {
-                                    const newContexts = [...contexts]
+                                    const newContexts = [...contextList]
                                     newContexts[index] = e.target.value
-                                    setContexts(newContexts)
+                                    setContextList(newContexts)
                                 }}
                                 rows={rowsInContextInput}
                             />
                             <div className="flex flex-col gap-[2%]">
-                                {index == contexts.length - 1 && (
+                                {index == contextList.length - 1 && (
                                     <button
                                         className="hover:cursor-pointer"
                                         onClick={addContextInput}
@@ -94,7 +96,7 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
                                         />
                                     </button>
                                 )}
-                                {contexts.length > 1 && (
+                                {contextList.length > 1 && (
                                     <button
                                         className="hover:cursor-pointer"
                                         onClick={() =>
