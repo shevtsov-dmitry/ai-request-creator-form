@@ -1,4 +1,4 @@
 export type RequestPart = {
-    userRequest: string
+    userRequestMessage: string
     context: string[]
 }

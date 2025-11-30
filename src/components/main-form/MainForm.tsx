@@ -3,18 +3,19 @@ import React, { useEffect, useState } from 'react'
 interface MainFormProps {}
 
 const MainForm: React.FC<MainFormProps> = ({}) => {
-    const DEFAULT_ROWS_AMOUNT = 10
+    const DEFAULT_TEXT_AREA_ROWS_AMOUNT = 10
 
     const [log, setLog] = useState<string>('<nothing>')
     const [contexts, setContexts] = useState<string[]>([''])
-    const [rowsInContextInput, setRowsInContextInput] =
-        useState<number>(DEFAULT_ROWS_AMOUNT)
+    const [rowsInContextInput, setRowsInContextInput] = useState<number>(
+        DEFAULT_TEXT_AREA_ROWS_AMOUNT
+    )
 
     useEffect(() => {
         switch (contexts.length) {
             case 0:
             case 1:
-                setRowsInContextInput(DEFAULT_ROWS_AMOUNT)
+                setRowsInContextInput(DEFAULT_TEXT_AREA_ROWS_AMOUNT)
                 break
             case 2:
                 setRowsInContextInput(6)
@@ -25,7 +26,22 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
             default:
                 setRowsInContextInput(2)
         }
-    }, [])
+    }, [contexts])
+
+    function addContextInput(
+        event: MouseEvent<HTMLButtonElement, MouseEvent>
+    ): void {
+        event = null
+        const prevList: string[] = [...contexts]
+        prevList.push('')
+        setContexts(prevList)
+    }
+
+    function removeContextInputAtIndex(index: number): void {
+        const prevList: string[] = [...contexts]
+        prevList.splice(index, 1)
+        setContexts(prevList)
+    }
 
     return (
         <main className="mx-5 flex h-screen w-screen flex-col gap-3">
@@ -52,9 +68,9 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
                 >
                     Context
                 </label>
-                <div>
+                <div className="flex flex-col gap-2">
                     {contexts.map((context, index) => (
-                        <div className="flex">
+                        <div className="flex gap-2">
                             <textarea
                                 className="w-full flex-8 rounded-md border border-gray-500 bg-gray-700 px-4 py-2 text-base font-normal text-white focus:border-blue-500 focus:outline-none"
                                 key={index}
@@ -66,8 +82,31 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
                                 }}
                                 rows={rowsInContextInput}
                             />
-                            <div className="h-16 w-full flex-1 bg-purple-300">
-                                <img src="" />
+                            <div className="flex flex-col gap-[2%]">
+                                {index == contexts.length - 1 && (
+                                    <button
+                                        className="hover:cursor-pointer"
+                                        onClick={addContextInput}
+                                    >
+                                        <img
+                                            width={30}
+                                            src="images/icons/plus.svg"
+                                        />
+                                    </button>
+                                )}
+                                {contexts.length > 1 && (
+                                    <button
+                                        className="hover:cursor-pointer"
+                                        onClick={() =>
+                                            removeContextInputAtIndex(index)
+                                        }
+                                    >
+                                        <img
+                                            width={30}
+                                            src="images/icons/minus.svg"
+                                        />
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -80,7 +119,7 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
                         boxShadow:
                             'rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px',
                     }}
-                    className="w-fit rounded-lg bg-gray-600 px-8 py-4 text-base font-semibold text-white transition-colors hover:cursor-pointer hover:bg-gray-700 focus:outline-none"
+                    className="w-fit rounded-lg bg-gray-600 px-6 py-2 text-2xl font-semibold text-white transition-colors hover:cursor-pointer hover:bg-gray-700 focus:outline-none"
                 >
                     COPY
                 </button>
