@@ -1,0 +1,40 @@
+@import 'tailwindcss';
+
+/* Container for the toggle */
+.toggle {
+    @apply relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full transition-colors duration-300 ease-in-out;
+}
+
+/* Hide the native checkbox appearance */
+.toggle-input {
+    @apply absolute h-0 w-0 opacity-0;
+}
+
+/* Background track (OFF = gray) */
+.toggle-bg {
+    @apply absolute inset-0 h-12 w-24 rounded-full bg-gray-400 transition-all duration-300 ease-in-out;
+}
+
+/* Background when CHECKED = blue */
+.toggle-input:checked + .toggle-bg {
+    @apply bg-blue-500;
+}
+
+/* Slider circle */
+.toggle-circle {
+    @apply absolute left-1 h-4 w-4 rounded-full bg-white shadow transition-all duration-300 ease-in-out;
+}
+
+/* Move circle when checked */
+.toggle-input:checked + .toggle-bg .toggle-circle {
+    @apply translate-x-5;
+}
+
+/* Settings row styling */
+.settings-row {
+    @apply flex items-center gap-[1%];
+}
+
+.settings-row p {
+    @apply font-serif text-lg;
+}
