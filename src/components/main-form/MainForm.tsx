@@ -1,3 +1,4 @@
+import { encode } from '@toon-format/toon'
 import React, { useEffect, useState } from 'react'
 import { useKeyboardShortcuts } from 'use-keyboard-shortcuts'
 
@@ -24,7 +25,7 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
     )
 
     useKeyboardShortcuts([
-        { keys: ['alt', 'n'], onEvent: (e) => addContextInput() },
+        { keys: ['alt', 'n'], onEvent: () => addContextInput() },
     ])
 
     useEffect(() => {
@@ -56,14 +57,15 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
         setContextList(prevList)
     }
 
-    function handleButtonPressToCopyOutput(): void {
+    function handleButtonPressToCopyOutput() {
         if (userRequestMessage !== '') {
-            const newJsonObject = {
-                context: contextList,
+            const formattedToon = encode({
                 userMessage: userRequestMessage,
-            }
+                context: contextList,
+            })
+
             navigator.clipboard
-                .writeText(JSON.stringify(newJsonObject, null, 2))
+                .writeText(formattedToon)
                 .then(() => {
                     setLog('Output copied to clipboard')
                     setCopyButtonColor(CopyButtonColors.SUCCESS_GREEN)
@@ -184,6 +186,7 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
                 </button>
             </div>
             {/* TODO {Settings.showLogs && <div className="text-sm font-light text-wrap text-gray-200"> {log} </div>}*/}
+            {false && <p>{log}</p>}
         </main>
     )
 }
