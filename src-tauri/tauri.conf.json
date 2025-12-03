@@ -13,8 +13,8 @@
         "windows": [
             {
                 "title": "ai-request-creator-form",
-                "width": 800,
-                "height": 600
+                "width": 850,
+                "height": 950
             }
         ],
         "security": {
