@@ -100,9 +100,9 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
     }
 
     return (
-        <main className="mx-5 flex h-screen w-screen flex-col gap-3">
-            <h1 className="w-full text-center text-2xl font-black text-gray-300">
-                REQUEST CREATOR
+        <main className="mx-[5%] mt-10 flex h-screen w-screen flex-col gap-6">
+            <h1 className="w-full text-center text-3xl font-black text-gray-300">
+                REQUEST CREATOR 💬
             </h1>
             <div>
                 <label
@@ -111,9 +111,9 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
                 >
                     User Message
                 </label>
-                <input
-                    type="text"
+                <textarea
                     id="user-input"
+                    rows={4}
                     className="w-full rounded-md border border-gray-500 bg-gray-700 px-4 py-2 text-base font-normal text-white focus:border-blue-500 focus:outline-none"
                     value={userRequestMessage}
                     onChange={(e) => setUserRequestMessage(e.target.value)}
@@ -183,6 +183,19 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
                     className="w-fit rounded-lg px-6 py-2 text-2xl font-semibold text-white transition-all hover:scale-105 hover:cursor-pointer hover:bg-gray-700 focus:outline-none"
                 >
                     COPY
+                </button>
+                <button
+                    type="button"
+                    onClick={() => {
+                        setUserRequestMessage('')
+                        setContextList([''])
+                    }}
+                    style={{
+                        backgroundColor: CopyButtonColors.DEFAULT_GRAY_BLUE,
+                    }}
+                    className="absolute mt-1.5 ml-60 w-fit rounded-lg px-3 py-1 text-xl font-semibold text-white transition-all hover:scale-105 hover:cursor-pointer hover:bg-gray-700 focus:outline-none"
+                >
+                    CLEAR
                 </button>
             </div>
             {/* TODO {Settings.showLogs && <div className="text-sm font-light text-wrap text-gray-200"> {log} </div>}*/}
