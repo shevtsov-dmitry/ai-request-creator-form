@@ -8,6 +8,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
     type SettingsOptions = {
         useShortcuts: boolean
         useVisualShortuctutsGuide: boolean
+        showLogs: boolean
     }
 
     const [settings, setSettings] = useState<SettingsOptions>(() => {
@@ -17,6 +18,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
             : {
                   useShortcuts: false,
                   useVisualShortuctutsGuide: false,
+                  showLogs: false,
               }
     })
 

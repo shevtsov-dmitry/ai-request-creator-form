@@ -6,10 +6,21 @@ interface MainFormProps {}
 const MainForm: React.FC<MainFormProps> = ({}) => {
     const DEFAULT_TEXT_AREA_ROWS_AMOUNT = 10
 
+    const [userRequestMessage, setUserRequestMessage] = useState<string>('')
     const [log, setLog] = useState<string>('<nothing>')
     const [contextList, setContextList] = useState<string[]>([''])
     const [rowsInContextInput, setRowsInContextInput] = useState<number>(
         DEFAULT_TEXT_AREA_ROWS_AMOUNT
+    )
+
+    enum CopyButtonColors {
+        DEFAULT_GRAY_BLUE = '#414754',
+        SUCCESS_GREEN = '#2c855b',
+        FAILURE_RED = '#873141',
+    }
+
+    const [copyButtonColor, setCopyButtonColor] = useState<string>(
+        CopyButtonColors.DEFAULT_GRAY_BLUE
     )
 
     useKeyboardShortcuts([
@@ -45,6 +56,47 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
         setContextList(prevList)
     }
 
+    function handleButtonPressToCopyOutput(): void {
+        if (userRequestMessage !== '') {
+            const newJsonObject = {
+                context: contextList,
+                userMessage: userRequestMessage,
+            }
+            navigator.clipboard
+                .writeText(JSON.stringify(newJsonObject, null, 2))
+                .then(() => {
+                    setLog('Output copied to clipboard')
+                    setCopyButtonColor(CopyButtonColors.SUCCESS_GREEN)
+                    setTimeout(
+                        () =>
+                            setCopyButtonColor(
+                                CopyButtonColors.DEFAULT_GRAY_BLUE
+                            ),
+                        700
+                    )
+                })
+                .catch((error) => {
+                    console.error('Failed to copy output:', error)
+                    setLog('Failed to copy output')
+                    setCopyButtonColor(CopyButtonColors.FAILURE_RED)
+                    setTimeout(
+                        () =>
+                            setCopyButtonColor(
+                                CopyButtonColors.DEFAULT_GRAY_BLUE
+                            ),
+                        700
+                    )
+                })
+        } else {
+            setLog('User input is empty')
+            setCopyButtonColor(CopyButtonColors.FAILURE_RED)
+            setTimeout(
+                () => setCopyButtonColor(CopyButtonColors.DEFAULT_GRAY_BLUE),
+                700
+            )
+        }
+    }
+
     return (
         <main className="mx-5 flex h-screen w-screen flex-col gap-3">
             <h1 className="w-full text-center text-2xl font-black text-gray-300">
@@ -61,6 +113,8 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
                     type="text"
                     id="user-input"
                     className="w-full rounded-md border border-gray-500 bg-gray-700 px-4 py-2 text-base font-normal text-white focus:border-blue-500 focus:outline-none"
+                    value={userRequestMessage}
+                    onChange={(e) => setUserRequestMessage(e.target.value)}
                 />
             </div>
             <div>
@@ -117,18 +171,19 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
             <div className="flex justify-center">
                 <button
                     type="button"
+                    onClick={handleButtonPressToCopyOutput}
                     style={{
                         boxShadow:
                             'rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px',
+
+                        backgroundColor: copyButtonColor,
                     }}
-                    className="w-fit rounded-lg bg-gray-600 px-6 py-2 text-2xl font-semibold text-white transition-colors hover:cursor-pointer hover:bg-gray-700 focus:outline-none"
+                    className="w-fit rounded-lg px-6 py-2 text-2xl font-semibold text-white transition-all hover:scale-105 hover:cursor-pointer hover:bg-gray-700 focus:outline-none"
                 >
                     COPY
                 </button>
             </div>
-            <div className="text-sm font-light text-wrap text-gray-200">
-                {log}
-            </div>
+            {/* TODO {Settings.showLogs && <div className="text-sm font-light text-wrap text-gray-200"> {log} </div>}*/}
         </main>
     )
 }

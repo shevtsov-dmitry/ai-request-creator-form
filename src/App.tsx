@@ -1,11 +1,11 @@
 import './App.css'
-import Settings from './components/settings/Settings'
+import MainForm from './components/main-form/MainForm'
 
 function App() {
     return (
         <main className="flex min-h-screen items-center justify-center bg-gray-800">
-            <Settings />
-            {/*<MainForm />*/}
+            {/*<Settings />*/}
+            <MainForm />
         </main>
     )
 }
