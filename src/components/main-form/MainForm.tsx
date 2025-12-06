@@ -45,6 +45,7 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
             default:
                 setRowsInContextInput(2)
         }
+
     }, [contextList])
 
     function addContextInput(): void {
@@ -108,6 +109,10 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
         }
     }
 
+    function formatNewContextInput(text: string): string {
+        return text.replaceAll("\n", "");
+    }
+
     return (
         <main className="mx-[5%] mt-10 flex h-screen w-screen flex-col gap-6">
             <h1 className="w-full text-center text-3xl font-black text-gray-300">
@@ -145,7 +150,8 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
                                 value={context}
                                 onChange={(e) => {
                                     const newContexts = [...contextList]
-                                    newContexts[index] = e.target.value
+                                    newContexts[index] =
+                                        formatNewContextInput(e.target.value)
                                     setContextList(newContexts)
                                 }}
                                 rows={rowsInContextInput}
