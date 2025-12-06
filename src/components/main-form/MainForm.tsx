@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { useKeyboardShortcuts } from 'use-keyboard-shortcuts'
+import React, {useEffect, useState} from 'react'
+import {useKeyboardShortcuts} from 'use-keyboard-shortcuts'
+import {encode} from "@toon-format/toon";
 
-interface MainFormProps {}
+interface MainFormProps {
+}
 
 const MainForm: React.FC<MainFormProps> = ({}) => {
     const DEFAULT_TEXT_AREA_ROWS_AMOUNT = 10
@@ -24,7 +26,8 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
     )
 
     useKeyboardShortcuts([
-        { keys: ['alt', 'n'], onEvent: () => addContextInput() },
+        {keys: ['alt', 'n'], onEvent: () => addContextInput()},
+        {keys: ['alt', 'shift', 'c'], onEvent: () => clearInputsContext()},
     ])
 
     useEffect(() => {
@@ -56,15 +59,22 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
         setContextList(prevList)
     }
 
+    function clearInputsContext() {
+        setUserRequestMessage('')
+        setContextList([''])
+    }
+
     function handleButtonPressToCopyOutput() {
+        const toon = encode(
+            {
+                userMessage: userRequestMessage,
+                context: contextList,
+            }
+        )
+
         if (userRequestMessage !== '') {
             navigator.clipboard
-                .writeText(
-                    JSON.stringify({
-                        userMessage: userRequestMessage,
-                        context: contextList,
-                    })
-                )
+                .writeText(toon)
                 .then(() => {
                     setLog('Output copied to clipboard')
                     setCopyButtonColor(CopyButtonColors.SUCCESS_GREEN)
@@ -127,10 +137,11 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
                 </label>
                 <div className="flex flex-col gap-2">
                     {contextList.map((context, index) => (
-                        <div className="flex gap-2">
+                        <div
+                            key={index}
+                            className="flex gap-2">
                             <textarea
                                 className="w-full flex-8 rounded-md border border-gray-500 bg-gray-700 px-4 py-2 text-base font-normal text-white focus:border-blue-500 focus:outline-none"
-                                key={index}
                                 value={context}
                                 onChange={(e) => {
                                     const newContexts = [...contextList]
@@ -186,10 +197,7 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
                 </button>
                 <button
                     type="button"
-                    onClick={() => {
-                        setUserRequestMessage('')
-                        setContextList([''])
-                    }}
+                    onClick={() => clearInputsContext()}
                     style={{
                         backgroundColor: CopyButtonColors.DEFAULT_GRAY_BLUE,
                     }}
@@ -203,5 +211,6 @@ const MainForm: React.FC<MainFormProps> = ({}) => {
         </main>
     )
 }
+
 
 export default MainForm
